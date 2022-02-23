@@ -48,7 +48,11 @@ def dataloaders():
 
 
 def test_fit(sample_model, dataloaders):
-    model = sample_model(nn.CrossEntropyLoss, optim.Adam, [(metrics.recall_score, {'average': 'macro'})])
+    model = sample_model(
+        nn.CrossEntropyLoss,
+        optim.Adam,
+        [(metrics.recall_score, {'average': 'macro'}), (metrics.accuracy_score, {})]
+    )
     model.fit(dataloaders)
     assert True
 
