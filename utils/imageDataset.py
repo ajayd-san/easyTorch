@@ -8,8 +8,8 @@ from torch.utils.data import Dataset
 
 class CustomDataset(Dataset):
     def __init__(self, data: pd.DataFrame, augmentations=None, random_on_error: bool = True):
-        self.image_paths = data["path"].to_numpy()
-        self.targets = data["label"].to_numpy()
+        self.image_paths = data.iloc[:, 0].to_numpy()
+        self.targets = data.iloc[:, 1].to_numpy()
         self.augmentations = augmentations
         self.random_on_error = random_on_error
 
