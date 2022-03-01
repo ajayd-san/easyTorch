@@ -5,11 +5,34 @@ import torch
 from utils.imageDataset import CustomDataset
 import pandas as pd
 from tests.helpers import simple_augmentation
+from typing import Callable
 
 
-def test_datataset_len():
-    filepath = os.path.join(os.path.dirname(__file__), '../sampleData/paths.csv')
-    df = pd.read_csv(filepath)
+@pytest.fixture()
+def dataframe() -> Callable:
+    def get_dataframe(rel_path: str) -> pd.DataFrame:
+        filepath = os.path.join(os.path.dirname(__file__), rel_path)
+        df = pd.read_csv(filepath)
+        return df
+    return get_dataframe
+
+
+def test_random_on_error_and_exit_on_error_same_value(dataframe):
+    df = dataframe('../sampleData/paths.csv')
+    with pytest.raises(ValueError):
+        CustomDataset(df, exit_on_error=True, random_on_error=True)
+
+
+def test_exit_on_error_raises_exception(dataframe):
+    df = dataframe('../sampleData/invalidset.csv')
+    cd = CustomDataset(df, exit_on_error=True, random_on_error=False)
+    with pytest.raises(Exception):
+        for _, _ in cd:
+            pass
+
+
+def test_datataset_len(dataframe):
+    df = dataframe('../sampleData/paths.csv')
     cd = CustomDataset(df)
     assert len(cd) == df.shape[0]
 
@@ -27,4 +50,3 @@ def test_dataset_getitem(augmentations):
 
     if augmentations is not None:
         assert list(image.size()) == [3, 40, 40]
-

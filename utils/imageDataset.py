@@ -7,10 +7,22 @@ from torch.utils.data import Dataset
 
 
 class CustomDataset(Dataset):
-    def __init__(self, data: pd.DataFrame, augmentations=None, random_on_error: bool = True):
+    def __init__(self, data: pd.DataFrame, augmentations=None, exit_on_error=False, random_on_error: bool = True):
+        """
+        :param data: Pandas dataframe with paths as first column and target as second column
+        :param augmentations: Image transformations
+        :param exit_on_error: Stop execution once an exception rises. Cannot be used in conjunction with random_on_error
+        :param random_on_error: Upon an exception while reading an image, pick a random image and process it instead.
+        Cannot be used in conjuntion with exit_on_error.
+        """
+
+        if exit_on_error and random_on_error:
+            raise ValueError("Only one of 'exit_on_error' and 'random_on_error' can be true")
+
         self.image_paths = data.iloc[:, 0].to_numpy()
         self.targets = data.iloc[:, 1].to_numpy()
         self.augmentations = augmentations
+        self.exit_on_error = exit_on_error
         self.random_on_error = random_on_error
 
     def __len__(self):
@@ -21,6 +33,8 @@ class CustomDataset(Dataset):
         try:
             image, target = self.read_image_data(index)
         except:
+            if self.exit_on_error:
+                raise
             print(f"Exception occurred while reading image, {index}")
             if self.random_on_error:
                 print("Replacing with random image")
