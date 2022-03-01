@@ -21,7 +21,7 @@ class CustomDataset(Dataset):
         try:
             image, target = self.read_image_data(index)
         except:
-            print(f"Exception occurred while reading image, {image}")
+            print(f"Exception occurred while reading image, {index}")
             if self.random_on_error:
                 print("Replacing with random image")
                 random_index = np.random.randint(0, self.__len__())
