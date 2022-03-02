@@ -81,17 +81,16 @@ class Trainer:
 
                     batch_class_prediction_val = torch.cat((batch_class_prediction_val, pred_class.cpu()), dim=0)
                     batch_targets_val = torch.cat((batch_targets_val, target.cpu()), dim=0)
-                    print(f"\n running loss: {running_loss / dataset_sizes['val']}")
 
                     loop.set_description(f"[VAL] Epoch [{epoch}/{epochs}]")
+                print(f"\n running loss: {running_loss / dataset_sizes['val']}")
 
                 Trainer.score_prediction(batch_targets_val[1:], batch_class_prediction_val[1:], self.metrics)
-
 
     def predict(self, images: TensorOrArray) -> TensorOrArray:
         """
         Predicts probability scores for inputs
-        :param images Accepts only 4d images:
+        :param images: Accepts only 4d ndarray
         :return: nd-Tensor of transformed logits
         """
         # todo implement sanity checks
