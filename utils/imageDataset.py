@@ -60,5 +60,4 @@ class CustomDataset(Dataset):
         image = io.imread(self.image_paths[index])
         if image.shape[2] > 3:
             image = color.rgba2rgb(image)
-
         return image, target
