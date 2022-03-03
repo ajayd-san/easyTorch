@@ -1,11 +1,13 @@
 import os
-
 import pytest
 import torch
 from utils.imageDataset import CustomDataset
 import pandas as pd
-from tests.helpers import simple_augmentation
+from tests.pytest_helpers.nn import simple_augmentation
 from typing import Callable
+
+# noinspection PyUnresolvedReferences
+from tests.pytest_helpers.data import image
 
 
 @pytest.fixture()
@@ -14,6 +16,7 @@ def dataframe() -> Callable:
         filepath = os.path.join(os.path.dirname(__file__), rel_path)
         df = pd.read_csv(filepath)
         return df
+
     return get_dataframe
 
 
@@ -50,3 +53,15 @@ def test_dataset_getitem(augmentations):
 
     if augmentations is not None:
         assert list(image.size()) == [3, 40, 40]
+
+
+def test_read_grayscale_img_and_convert():
+    df = pd.DataFrame(
+        {
+            'path': [os.path.join(os.path.dirname(__file__), '../sampleData/images/mau.jpg')],
+            'label': 0
+        }
+    )
+    cd = CustomDataset(df)
+    img, _ = next(iter(cd))
+    assert img.ndim == 3

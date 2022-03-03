@@ -23,6 +23,7 @@ class Trainer:
 
     def fit(self, dataloaders, epochs: int = 10) -> None:
 
+        self.model.train()
         dataset_sizes = {x: len(dataloaders[x].dataset) for x in ["train", "val"]}
 
         for epoch in range(epochs):
@@ -93,6 +94,7 @@ class Trainer:
         :param images: Accepts only 4d ndarray
         :return: nd-Tensor of transformed logits
         """
+        self.model.eval()
         # todo implement sanity checks
         if images.ndim < 4:
             pass

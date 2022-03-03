@@ -1,6 +1,3 @@
-import sys
-
-import torch
 from torch import nn
 import albumentations as A
 
@@ -9,9 +6,9 @@ simple_augmentation = A.Compose([
 ])
 
 
-class Demo_model(nn.Module):
+class DemoModel(nn.Module):
     def __init__(self):
-        super(Demo_model, self).__init__()
+        super(DemoModel, self).__init__()
         self.model = nn.Sequential(
             nn.MaxPool2d(2, 2),
             nn.MaxPool2d(2, 2),

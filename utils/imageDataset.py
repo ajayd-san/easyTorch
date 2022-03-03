@@ -29,10 +29,11 @@ class CustomDataset(Dataset):
         return self.image_paths.shape[0]
 
     def __getitem__(self, index):
-        image, target = None, None
         try:
             image, target = self.read_image_data(index)
-        except:
+        except IndexError:
+            raise
+        except Exception:
             if self.exit_on_error:
                 raise
             print(f"Exception occurred while reading image, {index}")
@@ -58,6 +59,8 @@ class CustomDataset(Dataset):
     def read_image_data(self, index: int) -> ImagePlusTarget:
         target = self.targets[index]
         image = io.imread(self.image_paths[index])
+        if image.ndim == 2:
+            image = color.gray2rgb(image)
         if image.shape[2] > 3:
             image = color.rgba2rgb(image)
         return image, target
