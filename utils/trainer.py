@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
 from tqdm import tqdm
-from customTypes import TensorOrArray, MetricList
+from customTypes import TensorOrArray, MetricList, Dataloader
+from typing import Dict
 
 
 class Trainer:
@@ -12,8 +13,17 @@ class Trainer:
         loss_func,
         optimizer,
         scheduler=None,
-        main_metric_greater_is_better=True
+        main_metric_greater_is_better: bool = True
     ):
+        """
+        :param model: torch.nn.Module inherited class.
+        :param metrics: List of metrics to be evaluated on validation set. First metric is considered the main metric.
+        :param loss_func: Loss function for the model to be evaluated on. eg: Logloss, MSE.
+        :param optimizer: Optimizer function. eg: Adam, SGD.
+        :param scheduler: Scheduler to tune learning rate on the fly.
+        :param main_metric_greater_is_better: Higher score is considered good by default, flip the bool in metrics where
+        lower score is considered better. Eg: MSE.
+        """
         self.model = model
         self.metrics = metrics
         self.main_metric = metrics[0][0]
@@ -33,8 +43,14 @@ class Trainer:
             score = metric(y, pred, **params)
             print(f'\n{metric.__name__}: {score}')
 
-    def fit(self, dataloaders, epochs: int = 10, save=False) -> None:
-
+    def fit(self, dataloaders: Dict[str, Dataloader], epochs: int = 10, save: bool = False) -> None:
+        """
+        Train the model and validate on validation data.
+        :param dataloaders: Python dict containing train and validation dataloaders.
+         Must contain 'train' and 'val as keys.
+        :param epochs: Number of epochs to train.
+        :param save: Save model state dict if main metric score is better than previous epoch.
+        """
         self.model.train()
         dataset_sizes = {x: len(dataloaders[x].dataset) for x in ["train", "val"]}
 
