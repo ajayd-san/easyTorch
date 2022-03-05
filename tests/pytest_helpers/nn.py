@@ -18,7 +18,7 @@ class DemoModel(nn.Module):
             nn.MaxPool2d(2, 2),
             nn.MaxPool2d(2, 2),
             nn.Flatten(),
-            nn.Linear(2 * 2 * 3, 3)
+            nn.Linear(2 * 2 * 3, 2)
         )
 
     def forward(self, images):

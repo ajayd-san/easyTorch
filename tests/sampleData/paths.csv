@@ -1,8 +1,13 @@
 path,label
 tests/sampleData/images/cat2.jpeg,0
-tests/sampleData/images/cat3.jpeg,1
-tests/sampleData/images/cat1.jpeg,2
-tests/sampleData/images/cat1.jpeg,2
-tests/sampleData/images/kitten1.jpeg,1
+tests/sampleData/images/cat3.jpeg,0
+tests/sampleData/images/cat1.jpeg,0
+tests/sampleData/images/cat1.jpeg,0
+tests/sampleData/images/kitten1.jpeg,0
 tests/sampleData/images/kitten2.jpeg,0
 tests/sampleData/images/kitten2.jpeg,0
+tests/sampleData/images/dog5.jpeg,1
+tests/sampleData/images/dog1.png,1
+tests/sampleData/images/dog3.jpeg,1
+tests/sampleData/images/dog2.jpeg,1
+tests/sampleData/images/dog4.jpeg,1

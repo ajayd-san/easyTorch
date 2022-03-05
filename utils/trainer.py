@@ -5,9 +5,21 @@ from customTypes import TensorOrArray, MetricList
 
 
 class Trainer:
-    def __init__(self, model, metrics: MetricList, loss_func, optimizer, scheduler=None):
+    def __init__(
+        self,
+        model,
+        metrics: MetricList,
+        loss_func,
+        optimizer,
+        scheduler=None,
+        main_metric_greater_is_better=True
+    ):
         self.model = model
         self.metrics = metrics
+        self.main_metric = metrics[0][0]
+        self.main_metric_parms = metrics[0][1]
+        self.main_metric_greater_is_better = main_metric_greater_is_better
+        self.best_score = None
         self.loss_func = loss_func
         self.optimizer = optimizer
         self.scheduler = scheduler
@@ -21,7 +33,7 @@ class Trainer:
             score = metric(y, pred, **params)
             print(f'\n{metric.__name__}: {score}')
 
-    def fit(self, dataloaders, epochs: int = 10) -> None:
+    def fit(self, dataloaders, epochs: int = 10, save=False) -> None:
 
         self.model.train()
         dataset_sizes = {x: len(dataloaders[x].dataset) for x in ["train", "val"]}
@@ -86,7 +98,29 @@ class Trainer:
                     loop.set_description(f"[VAL] Epoch [{epoch}/{epochs}]")
                 print(f"\n running loss: {running_loss / dataset_sizes['val']}")
 
-                Trainer.score_prediction(batch_targets_val[1:], batch_class_prediction_val[1:], self.metrics)
+            Trainer.score_prediction(batch_targets_val[1:], batch_class_prediction_val[1:], self.metrics)
+
+            if save:
+                current_score = self.main_metric(
+                    batch_targets_val.cpu(),
+                    batch_class_prediction_val.cpu(),
+                    **self.main_metric_parms
+                )
+
+                if (self.main_metric_greater_is_better and current_score > self.best_score) or \
+                        (self.main_metric_greater_is_better is False and current_score < self.best_score):
+                    print("[New Best score, saving state dict]")
+                    self.best_score = current_score
+                    self.save_model(epoch)
+
+    def save_model(self, epoch):
+        checkpoint = {
+            'state_dict': self.model.state_dict(),
+            'optimizer': self.optimizer.state_dict(),
+            f'best {self.main_metric.__name__}': self.best_score,
+            'epoch': epoch
+        }
+        torch.save(checkpoint, 'bestModel.pkl.tar')
 
     def predict(self, images: TensorOrArray) -> TensorOrArray:
         """
