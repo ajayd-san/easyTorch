@@ -47,9 +47,9 @@ class Trainer:
         """
         Train the model and validate on validation data.
         :param dataloaders: Python dict containing train and validation dataloaders.
-         Must contain 'train' and 'val as keys.
+         Must contain 'train' and 'val' as keys.
         :param epochs: Number of epochs to train.
-        :param save: Save model state dict if main metric score is better than previous epoch.
+        :param save: Save model state dict if main metric score is better than in previous epoch.
         """
         self.model.train()
         dataset_sizes = {x: len(dataloaders[x].dataset) for x in ["train", "val"]}
