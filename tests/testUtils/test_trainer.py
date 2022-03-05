@@ -1,7 +1,8 @@
 from sklearn import metrics
 from torch import nn, optim
 # noinspection PyUnresolvedReferences
-from tests.pytest_helpers.data import sample_model, dataloaders, image
+from tests.pytest_helpers.data import dataloaders, image
+from tests.pytest_helpers.nn import sample_model
 
 
 def test_fit(sample_model, dataloaders):
@@ -14,6 +15,7 @@ def test_fit(sample_model, dataloaders):
         model.fit(dataloaders)
     except:
         assert False
+
 
 def test_prediction(sample_model, image):
     _image = image('../sampleData/images/cat1.jpeg')

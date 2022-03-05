@@ -1,4 +1,4 @@
-from skimage import io
+from skimage import io, color
 
 
 class DatasetCleaner:
@@ -10,7 +10,11 @@ class DatasetCleaner:
     def fit(self):
         for idx in range(self.dataset_length):
             try:
-                io.imread(self.paths[idx])
+                image = io.imread(self.paths[idx])
+                if image.ndim == 2:
+                    image = color.gray2rgb(image)
+                if image.shape[2] > 3:
+                    image = color.rgba2rgb(image)
             except:
                 self.invalid_paths.append(idx)
 

@@ -4,10 +4,8 @@ from torch.utils import data
 import pytest
 from skimage import io
 import pandas as pd
-from .nn import simple_augmentation, DemoModel
-from customTypes import MetricList
+from .nn import simple_augmentation
 from utils.imageDataset import CustomDataset
-from utils.trainer import Trainer
 from typing import Callable
 
 
@@ -26,16 +24,10 @@ def image():
 
 
 @pytest.fixture()
-def sample_model():
-    def _get_model(loss_func, optimizer, metrics_: MetricList):
-        model = DemoModel()
-        loss_func = loss_func()
-        optimizer = optimizer(model.parameters())
-        model_trainer = Trainer(model, metrics_, loss_func, optimizer)
-
-        return model_trainer
-
-    return _get_model
+def invalidset_df():
+    paths = os.path.join(os.path.dirname(__file__), '../sampleData/invalidset.csv')
+    df = pd.read_csv(paths)
+    return df
 
 
 @pytest.fixture()
