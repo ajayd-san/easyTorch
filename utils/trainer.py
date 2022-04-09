@@ -7,13 +7,13 @@ from typing import Dict
 
 class Trainer:
     def __init__(
-        self,
-        model,
-        metrics: MetricList,
-        loss_func,
-        optimizer,
-        scheduler=None,
-        main_metric_greater_is_better: bool = True
+            self,
+            model,
+            metrics: MetricList,
+            loss_func,
+            optimizer,
+            scheduler=None,
+            main_metric_greater_is_better: bool = True
     ):
         """
         :param model: torch.nn.Module inherited class.
