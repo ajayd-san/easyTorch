@@ -9,6 +9,7 @@ from typing import Callable
 # noinspection PyUnresolvedReferences
 from tests.pytest_helpers.data import image
 
+
 @pytest.fixture()
 def dataframe() -> Callable:
     def get_dataframe(rel_path: str) -> pd.DataFrame:
@@ -25,6 +26,27 @@ def test_random_on_error_and_exit_on_error_same_value(dataframe):
         CustomDataset(df, exit_on_error=True, random_on_error=True)
 
 
+def test_dataframe_size(dataframe):
+    # invalid dataframe check
+    df_invalid_dataset_size = pd.DataFrame(
+        {
+            'path': [1, 2],
+            'label': [2, 3],
+            'xyz': [4, 5]
+        }
+    )
+
+    with pytest.raises(ValueError):
+        CustomDataset(df_invalid_dataset_size)
+
+    # valid dataframe check
+    valid_df = dataframe('../sampleData/paths.csv')
+    try:
+        CustomDataset(valid_df)
+    except Exception:
+        assert False
+
+
 def test_invalid_column_dtypes(dataframe):
     df_invalid_label_dtype = dataframe('../sampleData/paths.csv')
     df_invalid_label_dtype['label'] = df_invalid_label_dtype['label'].astype(str)
@@ -35,7 +57,7 @@ def test_invalid_column_dtypes(dataframe):
         {
             'path': [1, 2],
             'label': [2, 3]
-         }
+        }
     )
 
     with pytest.raises(ValueError):

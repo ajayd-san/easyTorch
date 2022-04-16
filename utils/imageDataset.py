@@ -19,6 +19,9 @@ class CustomDataset(Dataset):
         if exit_on_error and random_on_error:
             raise ValueError("Only one of 'exit_on_error' and 'random_on_error' can be true")
 
+        if data.shape[1] > 2:
+            raise ValueError(f"Expected 2 features, but received {data.shape[1]}")
+
         if not pd.api.types.is_numeric_dtype(data.iloc[:, 1]):
             raise ValueError(f"{data.columns[1]} must be of type `int`")
 
