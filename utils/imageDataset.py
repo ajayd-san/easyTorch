@@ -19,6 +19,12 @@ class CustomDataset(Dataset):
         if exit_on_error and random_on_error:
             raise ValueError("Only one of 'exit_on_error' and 'random_on_error' can be true")
 
+        if not pd.api.types.is_numeric_dtype(data.iloc[:, 1]):
+            raise ValueError(f"{data.columns[1]} must be of type `int`")
+
+        if not pd.api.types.is_string_dtype(data.iloc[:, 0]):
+            raise ValueError(f"{data.columns[0]} must be of type `string`")
+
         self.image_paths = data.iloc[:, 0].to_numpy()
         self.targets = data.iloc[:, 1].to_numpy()
         self.augmentations = augmentations
