@@ -86,7 +86,7 @@ class Trainer:
 
             epoch_loss = running_loss / dataset_sizes["train"]
             epoch_acc = float(running_acc) / dataset_sizes["train"]
-            print(f"\n running loss: {epoch_loss}, running acc: {epoch_acc}")
+            print(f"\n running loss: {epoch_loss}")
 
             if self.scheduler is not None:
                 self.scheduler.step(epoch_loss)
