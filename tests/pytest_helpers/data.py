@@ -4,14 +4,16 @@ from torch.utils import data
 import pytest
 from skimage import io
 import pandas as pd
+
+from customTypes import TensorOrArray
 from .nn import simple_augmentation
 from utils.imageDataset import CustomDataset
 from typing import Callable
 
 
 @pytest.fixture()
-def image():
-    def get_image(image_path: str) -> Callable:
+def image() -> Callable:
+    def get_image(image_path: str) -> TensorOrArray:
         filepath = os.path.join(os.path.dirname(__file__), image_path)
         _image = io.imread(filepath)
         _image = simple_augmentation(image=_image)['image']
