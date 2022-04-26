@@ -13,7 +13,8 @@ class Trainer:
             loss_func,
             optimizer,
             scheduler=None,
-            main_metric_greater_is_better: bool = True
+            main_metric_greater_is_better: bool = True,
+            device=None
     ):
         """
         :param model: torch.nn.Module inherited class.
@@ -33,7 +34,12 @@ class Trainer:
         self.loss_func = loss_func
         self.optimizer = optimizer
         self.scheduler = scheduler
-        self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
+
+        # can't be tested since I don't have a stupid gpu
+        if device is not None:
+            self.device = device
+        else:
+            self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
     @staticmethod
     def score_prediction(y, pred, metrics):
